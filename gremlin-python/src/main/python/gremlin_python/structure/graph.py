@@ -27,7 +27,7 @@ class Graph(object):
 
 
 class Element(object):
-    def __init__(self, id, label, properties=None):
+    def __init__(self, id, label, properties=[]):
         self.id = id
         self.label = label
         self.properties = properties

@@ -590,6 +590,7 @@ class EdgeIO(_GraphBinaryTypeIO):
         StringIO.dictify(obj.outV.label, writer, to_extend, True, False)
         to_extend.extend(NULL_BYTES)
         to_extend.extend(NULL_BYTES)
+        #writer.to_dict([], to_extend)
 
         return to_extend
 
