@@ -332,8 +332,9 @@ public abstract class MergeStep<S, E, C> extends FlatMapStep<S, E>
     /**
      * null Map == empty Map
      */
-    protected Map materializeMap(final Traverser.Admin<S> traverser, Traversal.Admin<S, ?> mapTraversal) {
-        Map map = (Map) TraversalUtil.apply(traverser, mapTraversal);
+    protected Map materializeMap(final Traverser.Admin<S> traverser, final Traversal.Admin<S, ?> mapTraversal) {
+        final Object o = TraversalUtil.apply(traverser, mapTraversal);
+        Map map = o instanceof GValue ? (Map) ((GValue) o).get() : (Map) o;
 
         // PartitionStrategy uses parameters as a mechanism for setting the partition key. trying to be as specific
         // as possible here wrt parameters usage to avoid misuse
