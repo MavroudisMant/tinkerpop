@@ -85,9 +85,10 @@ public final class TraversalMergeStep<S, E> extends ScalarMapStep<S, E> implemen
         } else {
             final Collection listA = convertTraverserToCollection(traverser);
 
-            if (parameterItems.get() instanceof Map) {
+            if (parameterItems != null && parameterItems.get() instanceof Map) {
                 throw new IllegalArgumentException(getStepName() + " step type mismatch: expected argument to be Iterable but got Map");
             }
+
             final Collection listB =
                     (null != valueTraversal)
                             ? convertTraversalToCollection(traverser, valueTraversal)
