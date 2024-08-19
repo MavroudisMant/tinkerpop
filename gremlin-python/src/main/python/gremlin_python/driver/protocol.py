@@ -19,6 +19,7 @@
 import json
 import logging
 import abc
+from gremlin_python.driver.auth import Auth
 
 log = logging.getLogger("gremlinpython")
 
@@ -54,12 +55,9 @@ class AbstractBaseProtocol(metaclass=abc.ABCMeta):
 
 class GremlinServerHTTPProtocol(AbstractBaseProtocol):
 
-    def __init__(self,
-                 message_serializer,
-                 username='', password=''):
+    def __init__(self, message_serializer, auth=None):
+        self._auth = auth
         self._message_serializer = message_serializer
-        self._username = username
-        self._password = password
         self._response_msg = {'status': {'code': 0,
                                          'message': '',
                                          'exception': ''},
@@ -71,18 +69,13 @@ class GremlinServerHTTPProtocol(AbstractBaseProtocol):
         super(GremlinServerHTTPProtocol, self).connection_made(transport)
 
     def write(self, request_message):
-
-        basic_auth = {}
-        if self._username and self._password:
-            basic_auth['username'] = self._username
-            basic_auth['password'] = self._password
-
         content_type = str(self._message_serializer.version, encoding='utf-8')
+
         message = {
-            'headers': {'CONTENT-TYPE': content_type,
-                        'ACCEPT': content_type},
+            'headers': {'content-type': content_type,
+                        'accept': content_type},
             'payload': self._message_serializer.serialize_message(request_message),
-            'auth': basic_auth
+            'auth': self._auth
         }
 
         self._transport.write(message)
